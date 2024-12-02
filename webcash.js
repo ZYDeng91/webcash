@@ -12,29 +12,34 @@ async function hashcash_count(stamp) {
   return Math.clz32(res32);
 }
 
+function pad(a) {
+  return a.toString().padStart(2, "0");
+}
+
 function getDMY() {
   const d = new Date();
-  const YY = (d.getUTCFullYear() % 100).toString().padStart(2, "0");
-  const MM = (d.getUTCMonth() + 1).toString().padStart(2, "0");
-  const DD = (d.getUTCDay() + 1).toString().padStart(2, "0");
+  const YY = pad(d.getUTCFullYear() % 100);
+  const MM = pad(d.getUTCMonth() + 1);
+  const DD = pad(d.getUTCDay() + 1);
   return `${YY}${MM}${DD}`;
 }
 
 function getDMYhm() {
   const d = new Date();
-  const YY = (d.getUTCFullYear() % 100).toString().padStart(2, "0");
-  const MM = (d.getUTCMonth() + 1).toString().padStart(2, "0");
-  const DD = (d.getUTCDay() + 1).toString().padStart(2, "0");
-  const hh = (d.getUTCHours()).toString().padStart(2, "0");
-  const mm = (d.getUTCMinutes()).toString().padStart(2, "0");
+  const YY = pad(d.getUTCFullYear() % 100);
+  const MM = pad(d.getUTCMonth() + 1);
+  const DD = pad(d.getUTCDay() + 1);
+  const hh = pad(d.getUTCHours());
+  const mm = pad(d.getUTCMinutes());
   return `${YY}${MM}${DD}${hh}${mm}`;
 }
 
 function getSalt(l) {
   const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=";
   const length = alphabet.length;
-  var res = '';
-  for (var _ = l; _ > 0; _--) {
+  let res = "";
+  let _;
+  for (_ = l; _ > 0; _--) {
     res += alphabet.charAt(Math.floor(Math.random() * length));
   }
   return res;
@@ -51,7 +56,7 @@ async function hashcash_mint(bits, date, res, ext) {
 }
 
 async function hashcash_mint_internal(challenge, bits) {
-  var counter = 0;
+  let counter = 0;
   while (true) {
     if (await hashcash_count(challenge + counter.toString(16)) >= bits) {
       return challenge + counter.toString(16);
