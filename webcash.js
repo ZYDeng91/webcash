@@ -139,7 +139,7 @@ function getDMY() {
   const d = new Date();
   const YY = pad(d.getUTCFullYear() % 100);
   const MM = pad(d.getUTCMonth() + 1);
-  const DD = pad(d.getUTCDay() + 1);
+  const DD = pad(d.getUTCDate());
   return `${YY}${MM}${DD}`;
 }
 
@@ -147,7 +147,7 @@ function getDMYhm() {
   const d = new Date();
   const YY = pad(d.getUTCFullYear() % 100);
   const MM = pad(d.getUTCMonth() + 1);
-  const DD = pad(d.getUTCDay() + 1);
+  const DD = pad(d.getUTCDate());
   const hh = pad(d.getUTCHours());
   const mm = pad(d.getUTCMinutes());
   return `${YY}${MM}${DD}${hh}${mm}`;
