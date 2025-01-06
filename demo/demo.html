@@ -1,0 +1,19 @@
+<h1>A web-based hashcash demo</h1>
+
+<form>
+  <div id="form">
+    <label for="email">E-mail address:</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <br />
+    <label for="msg">Your message</label>
+    <input type="text" id="msg" placeholder="Enter your message">
+    <br />
+    <label for="pow">Hashcash stamp (PoW)</label>
+    <input type="text" id="pow" placeholder="Stamp goes here" required readonly>
+    <a id="mint" href="#">Get Stamp</a>
+    <br />
+    <input type="submit" id="submit" value="Send" />
+  </div>
+</form>
+<script src="./webcash.js"></script>
+<script src="./lib.js"></script>
