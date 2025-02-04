@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { checkStamp } from './validator.js'
+import { checkStamp } from './validator.mjs'
 
 const app = express()
 
