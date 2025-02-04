@@ -123,12 +123,16 @@ function calcSHA1(str) {
     e += olde;
   }
   // return hex(a) + hex(b) + hex(c) + hex(d) + hex(e)
-  return a;
+  return [a, b, c, d, e];
 }
 
 function hashcash_count(stamp) {
-  const res = calcSHA1(stamp);
-  return Math.clz32(res);
+  const [a, b, c, d, e] = calcSHA1(stamp);
+  return Math.clz32(a) < 32 ? Math.clz32(a) :
+	 Math.clz32(b) < 32 ? 32 + Math.clz32(b) :
+	 Math.clz32(c) < 32 ? 64 + Math.clz32(c) :
+	 Math.clz32(d) < 32 ? 96 + Math.clz32(d) :
+	 Math.clz32(e) < 32 ? 128 + Math.clz32(e) : 160
 }
 
 function pad(a) {
