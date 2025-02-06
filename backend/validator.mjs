@@ -55,7 +55,6 @@ function expiryCheck(date, expiration, now) {
   return isNaN(d) || d > now || d < now - expiration
 }
 
-console.log(process.env.NODE_ENV)
 export const testExports = process.env.NODE_ENV === 'test' ? {
   clzCheck,
   expiryCheck
