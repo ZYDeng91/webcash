@@ -1,6 +1,6 @@
 import { createHash } from 'crypto'
 
-export function checkStamp(stamp, resource, difficulty, expiration) {
+export function checkStamp(stamp, resource, difficulty, expiration, now) {
   // const [ver, bits, date, res, ext, rand, counter, _] = stamp.split(":")
   const [ver, bits, date, res, , , counter, _] = stamp.split(":")
   if (ver !== "1") {
@@ -11,25 +11,25 @@ export function checkStamp(stamp, resource, difficulty, expiration) {
   if (!counter || _ !== undefined) {
     return "malformed stamp"
   }
-  if (expiry(date, expiration)) {
+  if (expiryCheck(date, expiration, now)) {
     return "expired stamp"
   }
   const claimed = parseInt(bits)
   // claimed < difficulty; calculated < claimed; mismatched resource
-  if (claimed < difficulty || !clz(stamp, claimed) || resource !== res) {
+  if (claimed < difficulty || !clzCheck(stamp, claimed) || resource !== res) {
     return "invalid stamp"
   }
   return "ok"
 }
 
-function hash(stamp) {
+function sha1hash(stamp) {
   const sha1sum = createHash('sha1')
   sha1sum.update(stamp)
   return sha1sum.digest('hex')
 }
 
-function clz(stamp, claimed) {
-  const hashed = hash(stamp)
+function clzCheck(stamp, claimed) {
+  const hashed = sha1hash(stamp)
   let res = 0, i = 0, res32, hashed32
   while (8*i<hashed.length) {
     hashed32 = parseInt(hashed.slice(8*i, 8*i+8), 16)
@@ -46,11 +46,17 @@ function clz(stamp, claimed) {
   return false
 }
 
-function expiry(date, expiration) {
-  const now = Date.now()
+function expiryCheck(date, expiration, now) {
+  now = now || Date.now()
   // date format conversion is janky
   const datestr = `20${date.slice(0,2)}/${date.slice(2,4)}/${date.slice(4,6)}`
   const d = Date.parse(datestr)
   // invalid time; future stamp; expired stamp
   return isNaN(d) || d > now || d < now - expiration
 }
+
+console.log(process.env.NODE_ENV)
+export const testExports = process.env.NODE_ENV === 'test' ? {
+  clzCheck,
+  expiryCheck
+} : undefined
